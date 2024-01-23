@@ -15,6 +15,8 @@ We will be using `podman` instead of `docker` for local container management too
 
 ### Containerfile
 
+> Note: This section is currently incorrect until we adjust the new-app command to use the Containerfile instead of the Dockerfile.
+
 We will be using `Containerfile` instead of `Dockerfile` for defining our containers. Again, the definitions are virtually the same.
 
 We added a Containerfile to the directory to build the application and be used to serve the content once deployed to the OpenShift cluster.
@@ -38,3 +40,16 @@ Added a simple nginx.conf configuration file to tell the NGINX server where the 
 - Stop the container via `podman stop {CONTAINER_ID_FROM_EARLIER}`
 
 ## Outer Loop
+
+### OpenShift
+
+We will be using OpenShift to deploy our application to a cluster. We will be using the `oc` command line tool to interact with the cluster.
+
+### Deploying to OpenShift via the CLI
+
+- Login to the cluster
+- Create a new project via `oc new-project mean-stack-app`
+- Create a new application via `oc new-app https://github.com/HunterGerlach/mean-stack-app.git --strategy=docker --context-dir=angular-app` where you replace the URL with your own repository URL and the context-dir with the directory containing your application
+- Watch the build logs via `oc logs -f bc/mean-stack-app`
+- Expose the application via `oc expose svc/mean-stack-app`
+- Once the build is complete, you can view the application via `oc get route` and by visiting the URL in your browser
