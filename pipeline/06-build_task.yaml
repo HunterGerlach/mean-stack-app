@@ -1,0 +1,39 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: buildah-task
+spec:
+  params:
+    - name: IMAGE
+      type: string
+    - default: ./Dockerfile
+      name: DOCKERFILE
+      type: string
+    - default: .
+      name: CONTEXT
+      type: string
+  steps:
+    - command:
+        - buildah
+        - bud
+        - '--tls-verify=false'
+        - '--format=oci'
+        - '-f'
+        - $(params.DOCKERFILE)
+        - '-t'
+        - $(params.IMAGE)
+        - $(workspaces.source.path)/$(params.CONTEXT)
+      computeResources: {}
+      image: 'quay.io/buildah/stable:v1.11.0'
+      name: build
+      securityContext:
+        privileged: false
+      volumeMounts:
+        - mountPath: /var/lib/containers
+          name: varlibcontainers
+  volumes:
+    - emptyDir: {}
+      name: varlibcontainers
+  workspaces:
+    - description: The workspace containing the source code
+      name: source

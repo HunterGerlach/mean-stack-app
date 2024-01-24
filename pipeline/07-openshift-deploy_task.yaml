@@ -1,0 +1,36 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: openshift-deploy-task
+spec:
+  params:
+    - name: APP_NAME
+      type: string
+    - name: IMAGE
+      type: string
+    - default: ''
+      name: NAMESPACE
+      type: string
+  steps:
+    - computeResources: {}
+      image: 'quay.io/openshift/origin-cli:latest'
+      name: deploy
+      script: |
+        #!/bin/bash
+
+        # Change to the correct namespace, if necessary
+
+        if [ -n "$(params.NAMESPACE)" ]; then
+          oc project $(params.NAMESPACE)
+        fi
+
+        # Deploy the application
+
+        oc set image deployment/$(params.APP_NAME)
+        $(params.APP_NAME)=$(params.IMAGE)
+
+        # Ensure the deployment is rolled out
+
+        oc rollout status deployment/$(params.APP_NAME)
+      securityContext:
+        runAsUser: 0

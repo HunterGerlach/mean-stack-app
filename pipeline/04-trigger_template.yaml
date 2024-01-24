@@ -1,0 +1,39 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: build-and-deploy-pipeline-trigger-template
+spec:
+  params:
+    - description: The git revision
+      name: gitrevision
+    - description: The git repository URL
+      name: gitrepositoryurl
+    - description: The name of the application
+      name: app-name
+    - description: Context dir
+      name: context-dir
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: build-and-deploy-pipeline-run-
+      spec:
+        params:
+          - name: GIT_URL
+            value: $(tt.params.gitrepositoryurl)
+          - name: GIT_REVISION
+            value: $(tt.params.gitrevision)
+          - name: APP_NAME
+            value: $(tt.params.app-name)
+          - name: CONTEXT
+            value: $(workspaces.pipeline-workspace.path)/$(tt.params.context-dir)
+        pipelineRef:
+          name: build-and-deploy-pipeline
+        workspaces:
+          - name: pipeline-workspace
+            volumeClaimTemplate:
+              spec:
+                accessModes: ["ReadWriteOnce"]
+                resources:
+                  requests:
+                    storage: 1Gi
