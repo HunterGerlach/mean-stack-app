@@ -52,3 +52,40 @@ Unlike the angular-app, we will attempt to use S2I to build the application and 
 - Context Dir: `express-app`
 - Name: `express-app`
 - Click Create
+
+### OpenShift Pipelines (Tekton)
+
+We will be using OpenShift Pipelines to deploy our application to a cluster. We will be adding the `Pipeline` and `PipelineRun` definitions to our repository and then using the `oc` command line tool to interact with the cluster.
+
+Once you have the application deployed to the cluster, you can add the pipeline and pipeline run definitions to your repository and then run the following commands to deploy the pipeline and run it.
+
+- Login to the cluster
+- Enter the project where you have deployed your application, for example `oc project mean-stack-app-pipeline`
+- Change into the directory containing the pipeline and pipeline run definitions (e.g. `cd angular-app/cicd`)
+- Assuming you wish to use webhooks, apply manifests 01-04 which include the EventListener and TriggerTemplate definitions:
+
+```bash
+oc apply -f 01-event_listener.yaml
+oc apply -f 02-event_listener_route.yaml
+oc apply -f 03-trigger_binding.yaml
+oc apply -f 04-trigger_template.yaml
+```
+
+- Next, apply the pipeline task and pipeline definition:
+
+```bash
+oc apply -f 05-openshift-deploy_task.yaml
+oc apply -f 06-pipeline.yaml
+```
+
+- Now you need to obtain the URL of the event listener route via `oc get route build-and-deploy-pipeline-event-listener-route -o jsonpath='{.spec.host}'`
+
+- Configure the GitHub webhook by visiting the GitHub project -> Settings -> Webhooks -> Add webhook
+
+![GitHub Webhook Settings](./img/github-webhook-settings.png)
+
+- Add the previously copied URL of event listener (don't forget to add `http://` to the beginning of the URL)
+- Change content type to application/json
+- Leave the rest of the settings as default
+- Click Add webhook
+- Now, when you push a change to your repository, the pipeline will be triggered and you can view the logs via `oc logs -f pipelinerun/build-and-deploy-pipeline-run`

@@ -74,7 +74,7 @@ We will be using OpenShift Pipelines to deploy our application to a cluster. We 
 Once you have the application deployed to the cluster, you can add the pipeline and pipeline run definitions to your repository and then run the following commands to deploy the pipeline and run it.
 
 - Login to the cluster
-- Create a new project, for example `oc new-project mean-stack-app-pipeline`
+- Enter the project where you have deployed your application, for example `oc project mean-stack-app-pipeline`
 - Change into the directory containing the pipeline and pipeline run definitions (e.g. `cd angular-app/cicd`)
 - Assuming you wish to use webhooks, apply manifests 01-04 which include the EventListener and TriggerTemplate definitions:
 
