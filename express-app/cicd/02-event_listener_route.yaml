@@ -1,0 +1,10 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: build-and-deploy-pipeline-event-listener-route
+spec:
+  to:
+    kind: Service
+    name: el-build-and-deploy-pipeline-event-listener # This is an auto-generated name that is created by the EventListener (format: el-{event-listener-name})
+  port:
+    targetPort: http-listener

@@ -39,7 +39,7 @@ Added a simple nginx.conf configuration file to tell the NGINX server where the 
 - Visit http://127.0.0.1:8080 in your web browser and you should see the application.
 - Stop the container via `podman stop {CONTAINER_ID_FROM_EARLIER}`
 
-## Outer Loop
+## Outer Loop - Docker Build Strategy
 
 ### OpenShift
 
