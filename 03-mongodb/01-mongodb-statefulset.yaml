@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb-community-server
+spec:
+  serviceName: "mongodb"
+  replicas: 1  # Increase to 3 for a 3-node ReplicaSet
+  selector:
+    matchLabels:
+      app: mongodb-community-server
+  template:
+    metadata:
+      labels:
+        app: mongodb-community-server
+      annotations:
+        alpha.image.policy.openshift.io/resolve-names: '*'
+        app.openshift.io/route-disabled: 'false'
+        openshift.io/generated-by: OpenShiftWebConsole
+    spec:
+      containers:
+      - name: mongodb-community-server
+        image: mongodb/mongodb-community-server:latest
+        # command:  # Add this section to configure MongoDB to run in a ReplicaSet
+        #   - mongod
+        #   - "--replSet"
+        #   - "rs0"  # Name of the replica set
+        #   - "--bind_ip"
+        #   - "0.0.0.0"
+        ports:
+        - containerPort: 27017
+          protocol: TCP
+        volumeMounts:
+        - name: mongodb-data
+          mountPath: /data/db
+        - name: mongodb-config
+          mountPath: /data/configdb
+  volumeClaimTemplates:
+  - metadata:
+      name: mongodb-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 10Gi
+  - metadata:
+      name: mongodb-config
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 5Gi
