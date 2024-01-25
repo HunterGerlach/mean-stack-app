@@ -55,7 +55,7 @@ spec:
         - name: VERSION
           value: latest
         - name: PATH_CONTEXT
-          value: express-app # This is the directory name use during development of this feature
+          value: 02-express-app # This is the directory name use during development of this feature
         - name: TLSVERIFY
           value: 'true'
         - name: IMAGE
