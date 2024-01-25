@@ -63,7 +63,7 @@ spec:
         - name: DOCKERFILE
           value: ./Dockerfile
         - name: CONTEXT
-          value: angular-app
+          value: 01-angular-app # This is the directory name of the Angular app
         - name: TLSVERIFY
           value: 'true'
         - name: FORMAT
