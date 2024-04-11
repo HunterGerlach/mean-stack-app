@@ -49,7 +49,7 @@ We will be using OpenShift to deploy our application to a cluster. We will be us
 
 - Login to the cluster
 - Create a new project via `oc new-project mean-stack-app`
-- Create a new application via `oc new-app https://github.com/HunterGerlach/mean-stack-app.git --strategy=docker --context-dir=angular-app` where you replace the URL with your own repository URL and the context-dir with the directory containing your application
+- Create a new application via `oc new-app https://github.com/HunterGerlach/mean-stack-app.git --strategy=docker --context-dir=01-angular-app` where you replace the URL with your own repository URL and the context-dir with the directory containing your application
   - Note: The repository name is used as the deployment name and is also used by the tigger_binding, so if you change the name in one place just make sure they are all consistent.
 - Watch the build logs via `oc logs -f bc/mean-stack-app`
 - Expose the application via `oc expose svc/mean-stack-app`
